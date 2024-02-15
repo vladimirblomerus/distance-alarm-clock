@@ -1,0 +1,46 @@
+def set_snooze():
+    global mode
+    snoozeEndTime = time.time() + snoozeDuration
+    print("User will snooze for", snoozeDuration, "seconds")
+    sleep(snoozeDuration) #pauses program, but shouldn't be an issue for now
+    mode = 1
+    print("snooze over")
+    
+def is_snooze_up():
+    global mode
+    currentTime = time.time()
+    if mode == 2 and currentTime > snoozeEndTime:
+        return True
+    return False
+
+def beep_loop():
+    global mode
+    while True:
+        if mode == 1:
+            for _ in range(3):
+                if mode == 1:
+                    GPIO.output(buzzer,GPIO.HIGH)
+                    print ("Beep")
+                    sleep(0.05) # Delay in seconds
+                    GPIO.output(buzzer,GPIO.LOW)
+                    sleep(0.1) # Delay in seconds
+            sleep(0.6)
+        
+def button_loop():
+    global mode
+    while True:
+        if mode == 0:
+            continue
+        elif mode == 1:
+            if not GPIO.input(snoozeButton) == GPIO.LOW: #if button isn't pressed, skip
+                continue
+            shouldBeep = False
+            if mode == 1:
+                mode = 2 #snoozing
+                set_snooze()
+        elif mode == 2:
+            continue
+        else:
+            continue
+            
+    print("God morgon")
